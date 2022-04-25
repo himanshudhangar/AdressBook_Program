@@ -99,7 +99,7 @@ public class PersonContact {
 	}
 
 	public static void main(String[] args) {
-		PersonContact a = new PersonContact("himan","dhangar","uran","navi mumbai","maharashtra",425408,1234567654,"himanshu@gmail.com") ;
+		PersonContact a = new PersonContact("nrupesh","mhatre","uran","navi mumbai","maharashtra",423345,1234567654,"nrup@gmail.com") ;
 		a.toString();
 	}
 }

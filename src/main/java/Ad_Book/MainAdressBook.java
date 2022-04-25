@@ -1,5 +1,6 @@
 package Ad_Book;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MainAdressBook {
@@ -27,21 +28,25 @@ public class MainAdressBook {
 			System.out.println("14.Sort by zip code");
 			System.out.println("15.Write data to file");
 			System.out.println("16.Read data from file");
+			System.out.println("17.Write data to csv file");
+			System.out.println("18.Read data from csv file");
+			System.out.println("19.Write data to csv file");
+			System.out.println("20.Read data from csv file");
 			ch= s.nextInt();
 			switch(ch) {
 			case 1: 
 				c.readData();
 				break;
 			case 2:
-				c.ContactDisplay();
+				c.DisplayContacts();
 				break;
 			case 3:
 				System.out.println("\nEnter first name to edit :- ");
 				String name = s.next();
-				c.Dataedit(name);
+				c.editData(name);
 				break;
 			case 4:
-				c.Datadelete();
+				c.deleteData();
 				break;
 			case 5:
 				System.out.println("\nEnter the state name to display details :- ");
@@ -56,7 +61,7 @@ public class MainAdressBook {
 			case 7:
 				System.out.println("\nEnter the state name :- ");
 				state = s.next();
-				c.Dataedit(state);;
+				c.viewPersonByState(state);;
 				break;
 			case 8:
 				System.out.println("\nEnter the city name :- ");
@@ -79,23 +84,44 @@ public class MainAdressBook {
 				c.sortByFirstName();
 				break;
 			case 12:
-				c.sortByCity();;
+				c.sortByCity();
 				break;
 			case 13:
-				c.sortByState();;
+				c.sortByState();
 				break;
 			case 14:
 				c.sortByZip();
 				break;
 			case 15:
-				c.writeData();;
+				c.writeData();
 				break;
 			case 16:
-				c.readData();;
+				c.readData();
+				break;
+			case 17:
+				c.writeDataCSV();
+				break;
+			case 18:
+				c.readFileDataCSV();
+				break;
+			case 19:
+				try {
+					c.writeDataInJSon();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 20:
+				try {
+					c.readDataFromJson();
+				} catch (IOException e) {
+					e.printStackTrace();
+				};
 				break;
 			}System.out.println("Do you want to continue? if yes press '1' ");
 			ans = s.nextInt();
 		}while(ans == 1);
 		s.close();
 	}
+
 }

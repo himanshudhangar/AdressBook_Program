@@ -42,7 +42,7 @@ public class AdressBook {
 		System.out.println("Enter the email : ");
 		email = s.next();
 		AdressBook book = new AdressBook();
-		duplicate = book.DuplicateNamecheck( first ,last);
+		duplicate = book.checkDuplicateName( first ,last);
 		if(duplicate == false) {
 			PersonContact contact = new PersonContact(first , last , add , city , state , zip , phoneNo , email);
 			contactBook.add(contact);
@@ -53,7 +53,7 @@ public class AdressBook {
 		}
 	}
 
-	public boolean DuplicateNamecheck(String first,String last) {
+	public boolean checkDuplicateName(String first,String last) {
 		int i;
 		boolean duplicate = false ;
 		for(i=0;i<contactBook.size();i++) {
@@ -64,7 +64,7 @@ public class AdressBook {
 		}
 		return duplicate;
 	}
-	public void Dataedit(String name) {
+	public void editData(String name) {
 		int i,ans;
 		for(i=0;i<contactBook.size();i++) {
 			if(contactBook.get(i).getFirstName().equals(name)) {
@@ -122,7 +122,7 @@ public class AdressBook {
 		}
 	}
 
-	public void Datadelete() {
+	public void deleteData() {
 		int i;
 		System.out.println("\nEnter first name to delete : ");
 		String name = s.next();
@@ -152,8 +152,8 @@ public class AdressBook {
 			System.out.println("First Name: " + contact.getFirstName()+ "  " + contact.getLastName());
 		}
 	}
-	public void PersonStateView(String state) {
-		ArrayList<PersonContact> list = (ArrayList<PersonContact>) PersonContact.stream().filter(contactName -> contactName.getState().equals(state))
+	public void viewPersonByState(String state) {
+		ArrayList<PersonContact> list = (ArrayList<PersonContact>) contactBook.stream().filter(contactName -> contactName.getState().equals(state))
 				.collect(Collectors.toList());
 		for (PersonContact contact : list) {
 			System.out.println("Name: " + contact.getFirstName() +" "+ contact.getLastName());
@@ -163,7 +163,7 @@ public class AdressBook {
 	}
 
 	public void viewPersonByCity(String city) {
-		ArrayList<PersonContact> list = (ArrayList<PersonContact>) PersonContact.st().filter(contactName -> contactName.getCity().equals(city))
+		ArrayList<PersonContact> list = (ArrayList<PersonContact>) contactBook.stream().filter(contactName -> contactName.getCity().equals(city))
 				.collect(Collectors.toList());
 		for (PersonContact contact : list) {
 			System.out.println("First Name: " + contact.getFirstName()+ "  " + contact.getLastName());
@@ -173,7 +173,7 @@ public class AdressBook {
 	}
 	public int countPersonsByState(String state) {
 		int count= 0;
-		ArrayList<PersonContact> list = (ArrayList<PersonContact>) PersonContact.stream().filter(contactName -> contactName.getState().equals(state))
+		ArrayList<PersonContact> list = (ArrayList<PersonContact>) contactBook.stream().filter(contactName -> contactName.getState().equals(state))
 				.collect(Collectors.toList());
 		for (PersonContact contact : list) {
 			System.out.println("Name: " + contact.getFirstName()+ "  " + contact.getLastName());
@@ -224,7 +224,7 @@ public class AdressBook {
 		}
 	}
 	
-	public void ContactDisplay() {
+	public void DisplayContacts() {
 		System.out.println("\nContacts Present in Address Book:");
 		for(int i=0;i<contactBook.size();i++) {
 			System.out.println(contactBook.get(i));
@@ -239,19 +239,65 @@ public class AdressBook {
 	        });
 	        try {
 	            Files.write(Paths.get("Data.txt"), personBuffer.toString().getBytes());
-
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
 	    }
 
-	    public void Filedataread() {
+	    public void readFileData() {
 	        try {
 	            Files.lines(new File("Data.txt").toPath()).map(String::trim).forEach(System.out::println);
-
 	        } catch (IOException e) {
 	            e.printStackTrace();
-
 	        }
 	    }
+		 public void writeDataCSV() {
+		        StringBuffer personBuffer = new StringBuffer();
+		        contactBook.forEach(person -> {
+		            String personDataString = person.toString().concat("\n");
+		            personBuffer.append(personDataString);
+		        });
+		        try {
+		            Files.write(Paths.get("Data.csv"), personBuffer.toString().getBytes());
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+		    public void readFileDataCSV() {
+		        try {
+		            Files.lines(new File("Data.csv").toPath()).map(String::trim).forEach(System.out::println);
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }  
+		    public void writeDataInJSon() throws IOException {
+		        {
+		            Path filePath = Paths.get("data.json");
+		            Gson gson = new Gson();
+		            String json = gson.toJson(contactBook);
+		            FileWriter writer = new FileWriter(String.valueOf(filePath));
+		            writer.write(json);
+		            writer.close();
+		        }
+		    }
+
+		    public void readDataFromJson() throws IOException {
+		        ArrayList<PersonContact> contactList = null;
+		        Path filePath = Paths.get("data.json");
+		        try (Reader reader = Files.newBufferedReader(filePath);) {
+		            Gson gson = new Gson();
+		            contactList = new ArrayList<PersonContact>(Arrays.asList(gson.fromJson(reader, PersonContact[].class)));
+		            for (PersonContact contact : contactList) {
+		                System.out.println("Firstname : " + contact.getFirstName());
+		                System.out.println("Lastname : " + contact.getLastName());
+		                System.out.println("Address : " + contact.getAddress());
+		                System.out.println("City : " + contact.getCity());
+		                System.out.println("State : " + contact.getState());
+		                System.out.println("Zip : " + contact.getZip());
+		                System.out.println("Phone number : " + contact.getPhoneNo());
+		            }
+
+		        }
+		    }
 }
